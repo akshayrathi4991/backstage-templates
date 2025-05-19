@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: api-express-template
-  title: Node.js API express.js
+  title: Node.js Repo Template
   description: Node.js API
 spec:
   owner: user:guest
@@ -13,6 +13,7 @@ spec:
       required:
         - name
         - owner
+        - ecrname
       properties:
         name:
           title: name
@@ -27,6 +28,17 @@ spec:
           ui:options:
             catalogFilter:
               - kind: [User, Group]
+        ecrname:
+          title: ecr name
+          type: string
+          description: Write the Name of ECR repo
+          ui:autofocus: true
+        imagetag:
+          title: image tag
+          type: string
+          description: tag for image
+          ui:autofocus: true
+        
     - title: Choose Location
       required: 
         - repoUrl
@@ -48,10 +60,12 @@ spec:
       name: Fetch Base
       action: fetch:template
       input:
-        url: https://github.com/akshayrathi4991/skeleton-repo
+        url: https://github.com/akshayrathi4991/nodejs-repo-sample
         values:
-          name: ${{ parameters.name }}
+          project-name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}
+          ecr-name: ${{ parameters.ecrname }}
+          image-tag: ${{ parameters.imagetag }}
 
     - id: publish
       name: Publish
