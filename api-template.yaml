@@ -63,10 +63,10 @@ spec:
       input:
         url: https://github.com/akshayrathi4991/nodejs-repo-sample
         values:
-          project-name: ${{ parameters.name }}
+          name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}
-          ecr-name: ${{ parameters.ecrname }}
-          image-tag: ${{ parameters.imagetag }}
+          ecrname: ${{ parameters.ecrname }}
+          imagetag: ${{ parameters.imagetag }}
 
     - id: publish
       name: Publish
