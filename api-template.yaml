@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: api-express-template
-  title: Node.js Repo Template
+  name: nodejs-repo-sample-template
+  title: Node.js Repo Sample Template
   description: Node.js API
 spec:
   owner: user:guest
