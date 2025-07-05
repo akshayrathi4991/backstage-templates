@@ -49,8 +49,8 @@ spec:
           type: string
           ui:field: RepoUrlPicker
           ui:options:
-            # allowedHosts:
-            #   - github.com
+            allowedHosts:
+              - github.com
 
 # 1. Clone/fetch base code/config and perform templating
 # 2. Create repo and push code to repository
