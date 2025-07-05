@@ -1,0 +1,91 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: nodejs-repo-sample-template
+  title: Node.js Repo Sample Template
+  description: Node.js API
+spec:
+  owner: user:guest
+  type: service
+  
+  parameters:
+    - title: Project Info
+      required:
+        - name
+        - owner
+        - ecrname
+        - imagetag
+      properties:
+        name:
+          title: name
+          type: string
+          description: Unique name of component
+          ui:autofocus: true
+        owner:
+          title: owner
+          type: string
+          description: Owner of component
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              - kind: [User, Group]
+        ecrname:
+          title: ecrname
+          type: string
+          description: Write the Name of ECR repo
+          ui:autofocus: true
+        imagetag:
+          title: imagetag
+          type: string
+          description: tag for image
+          ui:autofocus: true
+        
+    - title: Choose Location
+      required: 
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+# 1. Clone/fetch base code/config and perform templating
+# 2. Create repo and push code to repository
+# 3. Register component with backstage
+
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: https://github.com/akshayrathi4991/nodejs-repo-sample
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+          ecrname: ${{ parameters.ecrname }}
+          imagetag: ${{ parameters.imagetag }}
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: this is ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  outputs:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
